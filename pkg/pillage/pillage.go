@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"path/filepath"
 	"sync"
 
 	"github.com/google/go-containerregistry/pkg/crane"
@@ -41,12 +42,19 @@ func MakeCraneOptions(insecure bool) (options []crane.Option) {
 	return options
 }
 
+func securejoin(paths ...string) (out string) {
+	for _, path := range paths {
+		out = filepath.Join(out, filepath.Clean("/"+path))
+	}
+	return out
+}
+
 //Store will output the information enumerated from an image to an output directory and optionally will pull the image filesystems as well
 func (image *ImageData) Store(options *StorageOptions) error {
 	log.Printf("Storing results for image: %s", image.Reference)
 
 	//make image output dir
-	imagePath := path.Join(options.ResultsPath, image.Registry, image.Repository, image.Tag)
+	imagePath := filepath.Join(options.ResultsPath, securejoin(image.Registry, image.Repository, image.Tag))
 	err := os.MkdirAll(imagePath, os.ModePerm)
 	if err != nil {
 		log.Printf("Error making storage path %s: %v", imagePath, err)
