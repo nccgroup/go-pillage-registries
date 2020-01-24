@@ -88,7 +88,7 @@ func (image *ImageData) Store(options *StorageOptions) error {
 
 		fs, err := crane.Pull(image.Reference, options.CraneOptions...)
 		if err != nil {
-			image.Error = errors.New(image.Error.Error() + err.Error())
+			image.Error = err
 		}
 		if options.CachePath != "" {
 			fs = cache.Image(fs, cache.NewFilesystemCache(options.CachePath))
