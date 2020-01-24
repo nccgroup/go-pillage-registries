@@ -14,7 +14,7 @@ If you would like to override this, just change `authn.DefaultKeychain` as descr
 git clone https://github.com/nccgroup/go-pillage-registries.git
 
 cd go-pillage-registries
-go install .
+go install ./...
 
 ```
 
